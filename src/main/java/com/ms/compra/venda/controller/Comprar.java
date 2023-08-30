@@ -4,6 +4,7 @@ import com.ms.compra.venda.model.Compra;
 import com.ms.compra.venda.model.Livros;
 import com.ms.compra.venda.repository.ICompraRepository;
 import com.ms.compra.venda.repository.ILivrosRepository;
+import com.ms.compra.venda.util.Interceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,19 +18,22 @@ public class Comprar {
 
     private final ILivrosRepository iLivrosRepository;
 
+    private Interceptor interceptor;
+
     Logger logger = LoggerFactory.getLogger(Comprar.class);
 
     public Comprar(ICompraRepository iCompraRepository, ILivrosRepository iLivrosRepository) {
         this.iCompraRepository = iCompraRepository;
         this.iLivrosRepository = iLivrosRepository;
+        this.interceptor = new Interceptor();
     }
 
     @PostMapping("comprar")
-    public ResponseEntity comprar(@RequestParam Long idLivro){
+    public ResponseEntity comprar(@RequestParam Long idLivro, @RequestHeader("Authorization") String token){
 
         try {
             //id comprador vem do token
-
+            interceptor.validate(token, "admin");
 
             Livros livro = iLivrosRepository.findById(idLivro).get();
 
