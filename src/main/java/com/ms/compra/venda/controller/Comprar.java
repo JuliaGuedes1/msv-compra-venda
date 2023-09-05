@@ -33,7 +33,10 @@ public class Comprar {
 
         try {
             //id comprador vem do token
-            interceptor.validate(token, "admin");
+            if(!interceptor.validate(token, "comprador")){
+                logger.info("Usuario nao eh um comprador, compra nao pode ser realizada");
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
 
             Livros livro = iLivrosRepository.findById(idLivro).get();
 
