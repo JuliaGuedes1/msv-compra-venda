@@ -57,4 +57,32 @@ public class Comprar {
 
     }
 
+    @PutMapping("atualizar-compra")
+    public ResponseEntity atualizarCompra(@RequestBody Compra compra, @RequestHeader("Authorization") String token) {
+
+
+        try {
+
+            if (!interceptor.validate(token, "comprador")) {
+                logger.info("Usuario nao eh um comprador, compra nao pode ser realizada");
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+
+            Compra compraAtualizada = iCompraRepository.findById(compra.getId()).get();
+            compraAtualizada.setIdComprador(compra.getIdComprador());
+            compraAtualizada.setValor(compra.getValor());
+            compraAtualizada.setIdLivro(compra.getIdLivro());
+            compraAtualizada.setIdVendedor(compra.getIdVendedor());
+
+            logger.info("Compra atualizada com sucesso");
+
+            return new ResponseEntity(iCompraRepository.save(compraAtualizada), HttpStatus.OK);
+
+
+        } catch (Exception e) {
+            logger.error("Erro ao atualizar a compra", e);
+        }
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 }
