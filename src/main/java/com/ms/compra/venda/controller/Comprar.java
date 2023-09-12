@@ -69,10 +69,8 @@ public class Comprar {
             }
 
             Compra compraAtualizada = iCompraRepository.findById(compra.getId()).get();
-            compraAtualizada.setIdComprador(compra.getIdComprador());
             compraAtualizada.setValor(compra.getValor());
             compraAtualizada.setIdLivro(compra.getIdLivro());
-            compraAtualizada.setIdVendedor(compra.getIdVendedor());
 
             logger.info("Compra atualizada com sucesso");
 
