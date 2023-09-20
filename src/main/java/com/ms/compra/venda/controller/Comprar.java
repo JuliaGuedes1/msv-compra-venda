@@ -2,6 +2,7 @@ package com.ms.compra.venda.controller;
 
 import com.ms.compra.venda.model.Compra;
 import com.ms.compra.venda.model.Livros;
+import com.ms.compra.venda.model.Status;
 import com.ms.compra.venda.repository.ICompraRepository;
 import com.ms.compra.venda.repository.ILivrosRepository;
 import com.ms.compra.venda.util.Interceptor;
@@ -83,4 +84,27 @@ public class Comprar {
 
         return new ResponseEntity(HttpStatus.OK);
     }
+
+    @PutMapping("cancelar-compra/{id}")
+    public ResponseEntity cancelarCompra(@PathVariable Long id, @RequestHeader("Authorization") String token){
+
+        try {
+            if(!interceptor.validate(token, "comprador")){
+                logger.info("Usuario nao eh um comprador, compra nao pode ser realizada");
+                return  new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+
+            Compra compra = iCompraRepository.findById(id).get();
+            compra.setStatus(Status.CANCELADA);
+            logger.info("Compra cancelada");
+
+            return new ResponseEntity(iCompraRepository.save(compra), HttpStatus.OK);
+
+        }catch (Exception e){
+            logger.error("Nao foi possivel cancelar a compra");
+        }
+
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
 }

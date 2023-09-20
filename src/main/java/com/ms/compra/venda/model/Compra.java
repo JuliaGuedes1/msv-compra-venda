@@ -18,6 +18,8 @@ public class Compra {
 
     private Double valor;
 
+    private Status status;
+
     public Long getId() {
         return id;
     }
@@ -57,4 +59,13 @@ public class Compra {
     public void setValor(Double valor) {
         this.valor = valor;
     }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
 }
