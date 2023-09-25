@@ -2,10 +2,10 @@ package com.ms.compra.venda.model;
 
 public enum Status {
 
-    APROVADA(1),
-    RECUSADA(2),
-    AGUARDANDO_PAGAMENTO(3),
-    CANCELADA(4);
+    APROVADA(0),
+    RECUSADA(1),
+    AGUARDANDO_PAGAMENTO(2),
+    CANCELADA(3);
 
     public int valorStatus;
 

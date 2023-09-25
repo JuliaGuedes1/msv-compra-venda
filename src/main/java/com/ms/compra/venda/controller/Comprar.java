@@ -46,6 +46,7 @@ public class Comprar {
             compra.setIdVendedor(livro.getIdVendedor());
             compra.setValor(livro.getValor());
             compra.setIdComprador(1L);
+            compra.setStatus(Status.AGUARDANDO_PAGAMENTO);
 
             iCompraRepository.save(compra);
 
@@ -72,6 +73,7 @@ public class Comprar {
             Compra compraAtualizada = iCompraRepository.findById(compra.getId()).get();
             compraAtualizada.setValor(compra.getValor());
             compraAtualizada.setIdLivro(compra.getIdLivro());
+            compraAtualizada.setStatus(Status.APROVADA);
 
             logger.info("Compra atualizada com sucesso");
 
