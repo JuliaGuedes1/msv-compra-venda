@@ -80,4 +80,52 @@ public class Interceptor {
     }
 
 
+    private Map<String, Long> validateId(String token){
+
+        JsonObject tokenJson = JsonParser.parseString(token).getAsJsonObject();
+
+        Long response = tokenJson.get("id").getAsLong();
+        Map<String, Long> mapUser = new HashMap<>();
+        mapUser.put("id", response);
+
+        return mapUser;
+
+    }
+
+    public boolean validateId(String token, Long id){
+
+        String url = "http://localhost:8080/person/validate";
+
+        Map<String, String> mapUser = new HashMap<>();
+        mapUser.put("token", token);
+
+        String jsonToken = convertHashMapToJson(mapUser);
+
+        try {
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.setHeader("Content-Type", "application/json");
+            httpPost.setEntity(new StringEntity((jsonToken)));
+
+            logger.info("Acessando end point validade do microservico usuario");
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity entity = response.getEntity();
+            String responseString = EntityUtils.toString(entity);
+
+            logger.info("Resposta do microservico usuario: " + responseString);
+
+            Map<String, Long> responseId = validateId(responseString);
+            if (!responseId.containsValue(id)){
+                return false;
+            }
+
+            return true;
+        }catch (Exception e){
+            logger.error("Erro ao chamar o microservico", e);
+        }
+
+        return false;
+    }
+
+
 }
